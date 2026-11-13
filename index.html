@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MY EXPENSES">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 <title>MY EXPENSES</title>
 <style>
 :root{--ink:#17202a;--muted:#77808b;--line:#e9edf1;--bg:#f6f8fa;--green:#168653;--red:#d34b4b;--blue:#4263eb}
@@ -102,6 +106,13 @@ function exportData(){let blob=new Blob([JSON.stringify(data,null,2)],{type:'app
 function restoreData(){let f=$('restoreFile').files[0];if(!f){alert('Choose a backup file first.');return}let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!Array.isArray(x.transactions)||typeof x.budgets!=='object')throw Error();if(confirm('Replace current app data with this backup?')){data={...data,...x};persist();render();alert('Backup restored.')}}catch(e){alert('This backup file is not valid.')}};r.readAsText(f)}
 function clearData(){if(confirm('Permanently delete all MY EXPENSES data on this browser?')){data={transactions:[],budgets:{},recurring:[],goal:0};persist();render()}}
 load();fillCats();render();
+</script>
+<script>
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(err => console.warn('Offline setup:', err));
+  });
+}
 </script>
 </body>
 </html>
